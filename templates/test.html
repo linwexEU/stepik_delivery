@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+</head>
+<body>
+    <h1>Main Page</h1>
+    <ul id="foods-list">
+        {% for food in foods %}
+            <li>{{ food.name }} - {{ food.price }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+<script>
+    fetch('http://127.0.0.1:8000/food/') // Замените на соответствующий URL вашего первого эндпоинта
+    // .then(response => response.json())
+    .then(data => {
+        // Сохранение полученных данных в переменной
+        let foods = data;
+
+        console.log(foods);
+
+        // Второй запрос к второму эндпоинту, передавая полученные данные
+        fetch('http://127.0.0.1:8000/', {
+            method: 'GET', // или другой метод запроса, если необходимо
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({foods: foods}) // Передача данных во второй эндпоинт
+        })
+        .then(response => {
+        // Обработка ответа от второго эндпоинта, если необходимо
+        })
+        .catch(error => {
+        // Обработка ошибок, если возникли проблемы с запросом к второму эндпоинту
+        console.error('Error:', error);
+        });
+    })
+    .catch(error => {
+        // Обработка ошибок, если возникли проблемы с запросом к первому эндпоинту
+        console.error('Error:', error);
+    });
+</script>

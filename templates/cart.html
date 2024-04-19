@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Bin | Stepik Delivery</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    /* Sticky footer styles
+    -------------------------------------------------- */
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      margin-bottom: 60px; /* Margin bottom by footer height */
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60px; /* Set the fixed height of the footer here */
+      line-height: 60px; /* Vertically center the text there */
+    }
+    .navbar {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'base_site.html' %}
+  <main class="container">
+    <h1 class="h3 my-4">Корзина</h1>
+
+    {% if not auth %}
+      <div class="alert alert-warning" role="alert">Чтобы сделать заказ – <a href="/auth/login/">войдите</a> или <a href="/auth/register/">зарегистрируйтесь</a></div>
+    {% endif %}
+    {% for message in get_flash_message(request) %}
+      <div class="alert alert-warning" role="alert">{{ message.message }}</div>
+    {% endfor %}
+    <div class="row mt-5">
+
+
+        <div class="col-4">
+          <form action="/cart/" method="POST">
+            <h4 class="">Ваши данные</h4>
+            <div class=" md-4 order-md-1">
+              <div class="mt-3 mb-3">
+                <label for="name">Ваше имя</label>
+                <input type="text" class="font-weight-bold form-control" id="name" name="username">
+              </div>
+            </div>
+            <div class=" md-4 order-md-1">
+              <div class="mt-3 mb-3">
+                <label for="name">Адрес</label>
+                <input type="text" class="font-weight-bold form-control" id="name" name="address">
+              </div>
+            </div>
+            <div class="md-4 form-label-group">
+              <label for="name">Электропочта</label>
+              <input type="email" id="inputEmail" class="form-control" name="email" required autofocus>
+              <label for="inputEmail"></label>
+            </div>
+            <div class=" md-4 order-md-1">
+              <div class="mt-3 mb-3">
+                <label for="name">Телефон</label>
+                <input type="text" class="font-weight-bold form-control" name="phone" id="name">
+              </div>
+
+            <input type="hidden" value = "875" name="order_summ">
+            <input type="hidden" value="[1,3,4]" name="order_cart">
+            {% if auth %}
+              <button type="submit" class=" mt-3 mb-5 btn btn-danger">Оформить заказ</button>
+            {% endif %}
+          </form>
+        </div></div>
+      <div class="col-1"></div>
+      <div class="col-7">
+        {% if amount_of_item >= 5 or amount_of_item == 0 %}
+          <h4 class="mb-3 col-7 mb-5">{{ amount_of_item }} блюд в корзине</h4>
+        {% elif amount_of_item == 1 %}
+          <h4 class="mb-3 col-7 mb-5">{{ amount_of_item }} блюдо в корзине</h4>
+        {% else %}
+          <h4 class="mb-3 col-7 mb-5">{{ amount_of_item }} блюда в корзине</h4>
+        {% endif %}
+        <table class="table">
+          <tbody>
+            {% for food in foods %}
+              <tr>
+                <th scope="row">{{ food["food_from_basket"]["name"] }}</th>
+                <td></td>
+                <td>{{ food["buy_count"] }}</td>
+                <td>{{ food["food_from_basket"]["price"] }}</td>
+                <td><a class="text-danger" href="/cart/delete_food/{{ food['food_from_basket']['id'] }}">Удалить</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% if foods %}
+          <a class="text-danger" href="/cart/delete_food_all/">Удалить все</a>
+        {% endif %}
+        <hr>
+        <p class="display-4 my-2 ">{{ full_price }} грн</p>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <nav class="container navbar navbar-light bg-light">
+      <ul class="navbar-nav mr-auto">
+        <p class="h4 nav-link">Stepik Delivery</p>
+      </ul>
+      <a class="text-muted" href="#">Project author 2020</a>
+    </nav>
+  </footer>
+</body>
+</main>
